@@ -8,11 +8,35 @@ async function initializeDatabase() {
   try {
     console.log('🔧 Initializing database tables...');
     
-    // Force push the schema to create tables
-    const { execSync } = require('child_process');
+    // First, try to connect and check if tables exist
+    try {
+      const count = await prisma.entry.count();
+      console.log('✅ Database tables already exist. Current entries:', count);
+      return;
+    } catch (error) {
+      console.log('📝 Tables don\'t exist, creating them...');
+    }
     
-    console.log('Running prisma db push...');
-    execSync('npx prisma db push --force-reset', { stdio: 'inherit' });
+    // Create tables using raw SQL
+    await prisma.$executeRaw`
+      CREATE TABLE IF NOT EXISTS "Entry" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "firstName" TEXT NOT NULL,
+        "lastName" TEXT NOT NULL,
+        "phone" TEXT NOT NULL UNIQUE,
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "hasWon" BOOLEAN NOT NULL DEFAULT false
+      );
+    `;
+    
+    await prisma.$executeRaw`
+      CREATE TABLE IF NOT EXISTS "Winner" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "entryId" TEXT NOT NULL UNIQUE,
+        "wonAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY ("entryId") REFERENCES "Entry"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+      );
+    `;
     
     console.log('✅ Database tables created successfully!');
     
@@ -22,10 +46,25 @@ async function initializeDatabase() {
     
   } catch (error) {
     console.error('❌ Database initialization failed:', error.message);
-    process.exit(1);
+    
+    // Fallback: try prisma db push
+    try {
+      console.log('🔄 Trying Prisma db push as fallback...');
+      const { execSync } = require('child_process');
+      execSync('npx prisma db push --force-reset --accept-data-loss', { stdio: 'inherit' });
+      console.log('✅ Fallback successful!');
+    } catch (fallbackError) {
+      console.error('❌ Fallback also failed:', fallbackError.message);
+      process.exit(1);
+    }
   } finally {
     await prisma.$disconnect();
   }
 }
 
-initializeDatabase();
+// Only run if this script is executed directly
+if (require.main === module) {
+  initializeDatabase();
+}
+
+module.exports = { initializeDatabase };
