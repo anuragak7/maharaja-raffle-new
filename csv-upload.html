@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload for Maharaja Raffle</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .card { 
+            background: rgba(255,255,255,0.1); 
+            padding: 30px; 
+            border-radius: 15px; 
+            backdrop-filter: blur(10px);
+        }
+        .btn { 
+            background: #4CAF50; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px;
+        }
+        .btn:hover { background: #45a049; }
+        input[type="file"] { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            width: 100%;
+        }
+        .status { 
+            margin-top: 20px; 
+            padding: 10px; 
+            border-radius: 5px; 
+        }
+        .success { background: rgba(76, 175, 80, 0.3); }
+        .error { background: rgba(244, 67, 54, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🎰 Maharaja Raffle - CSV Upload</h1>
+        <p>Upload your CSV file with columns: <strong>firstName, lastName, phone</strong></p>
+        
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="csvFile" accept=".csv" required>
+            <button type="submit" class="btn">Upload Entries to Cloud</button>
+        </form>
+        
+        <div id="status"></div>
+        
+        <hr style="margin: 30px 0; border: 1px solid rgba(255,255,255,0.2);">
+        
+        <h3>Quick Links:</h3>
+        <p>
+            <a href="https://maharaja-raffle.onrender.com" style="color: #90CAF9;">🏠 Main App</a><br>
+            <a href="https://maharaja-raffle.onrender.com/admin" style="color: #90CAF9;">⚙️ Admin Panel</a><br>
+            <a href="https://maharaja-raffle.onrender.com/draw" style="color: #90CAF9;">🎲 Draw Page</a>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('csvFile');
+            const statusDiv = document.getElementById('status');
+            
+            if (!fileInput.files[0]) {
+                statusDiv.innerHTML = '<div class="status error">Please select a CSV file</div>';
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            statusDiv.innerHTML = '<div class="status">Uploading... Please wait...</div>';
+            
+            try {
+                const response = await fetch('https://maharaja-raffle.onrender.com/api/entries/import', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="status success">
+                            ✅ Success! Imported ${result.imported || result.count || 'entries'} entries
+                            <br><br>
+                            <strong>Your raffle is now LIVE!</strong>
+                            <br>
+                            <a href="https://maharaja-raffle.onrender.com/draw" style="color: #81C784;">🎲 Start Drawing Winners</a>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `<div class="status error">❌ Error: ${result.error || 'Upload failed'}</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Network error: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
