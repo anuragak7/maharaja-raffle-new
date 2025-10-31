@@ -39,8 +39,9 @@ export async function POST(req: NextRequest) {
     }})
     return Response.json({ ok: true, entry: e })
   } catch (e: any) {
+    console.error('Database error creating entry:', e)
     if (e.code === 'P2002') return new Response('Phone already exists', { status: 400 })
-    return new Response('Failed to create', { status: 500 })
+    return new Response('Failed to create: ' + (e.message || 'Unknown error'), { status: 500 })
   }
 }
 
