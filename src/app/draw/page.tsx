@@ -133,7 +133,7 @@ export default function DrawPage() {
         
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-7xl font-bold text-yellow-400 mb-6 whitespace-nowrap">🎰 HICKSVILLE RAFFLE 🎰</h1>
+          <h1 className="text-7xl font-bold text-yellow-400 mb-6 whitespace-nowrap">🎰 MAHARAJA HICKSVILLE RAFFLE 🎰</h1>
           <div className="flex justify-center gap-6 text-white">
             <div className="bg-black/50 px-6 py-3 rounded text-xl">Total: {counters.total}</div>
             <div className="bg-black/50 px-6 py-3 rounded text-xl">Remaining: {counters.remaining}</div>
@@ -209,9 +209,9 @@ export default function DrawPage() {
               : 'bg-yellow-500 text-black hover:bg-yellow-400 cursor-pointer shadow-xl hover:shadow-2xl transform hover:scale-105'
           }`}
         >
-          {spinning ? '🎲 SPINNING HICKSVILLE RAFFLE...' : 
+          {spinning ? '🎲 SPINNING MAHARAJA HICKSVILLE RAFFLE...' : 
            counters.remaining <= 0 ? '🚫 NO ENTRIES REMAINING' :
-           '🎰 SPIN THE HICKSVILLE RAFFLE 🎰'}
+           '🎰 SPIN THE MAHARAJA HICKSVILLE RAFFLE 🎰'}
         </button>
 
         {/* Winner display - Full Screen Popup */}
