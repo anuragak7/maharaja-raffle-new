@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Entry {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String   @unique
+  createdAt DateTime @default(now())
+  hasWon    Boolean  @default(false)
+
+  winners   Winner[]
+}
+
+model Winner {
+  id        String   @id @default(uuid())
+  entryId   String
+  entry     Entry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  drawnAt   DateTime @default(now())
+  round     Int
+}
+
+model Config {
+  id          Int     @id @default(1)
+  maskPhone   Boolean @default(true)
+  spinMinSec  Int     @default(15)
+  spinMaxSec  Int     @default(20)
+  logoUrl     String?
+
+  @@map("Config")
+}

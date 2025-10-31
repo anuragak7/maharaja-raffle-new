@@ -1,0 +1,723 @@
+/* Tailwind CSS directives - these are processed by PostCSS during build */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0f19;
+  --fg: #e9eef7;
+  --accent: #f59e0b;
+  --casino-gold: #FFD700;
+  --casino-red: #DC143C;
+  --casino-black: #1a1a1a;
+}
+
+html, body {
+  height: 100%;
+  background: radial-gradient(1200px 800px at 50% -200px, #1f2937 0%, #0b0f19 40%, #0b0f19 100%);
+  color: var(--fg);
+}
+
+.btn {
+  @apply px-6 py-3 rounded-2xl text-lg font-semibold shadow-lg transition-transform active:scale-95;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #0b0f19;
+}
+
+.card {
+  @apply bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl;
+}
+
+.badge {
+  @apply text-xs px-2 py-1 rounded-full bg-white/10 border border-white/10;
+}
+
+/* Casino Theme Styles */
+.casino-header {
+  @apply flex items-center justify-between p-4 rounded-2xl mb-6;
+  background: linear-gradient(135deg, var(--casino-black) 0%, #2a2a2a 50%, var(--casino-black) 100%);
+  border: 2px solid var(--casino-gold);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.casino-title {
+  @apply text-3xl font-bold;
+  background: linear-gradient(45deg, var(--casino-gold), #FFA500, var(--casino-gold));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: casino-shine 2s ease-in-out infinite alternate;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.casino-stats {
+  @apply flex gap-3 text-sm;
+}
+
+.casino-badge {
+  @apply px-3 py-2 rounded-full font-semibold;
+  background: linear-gradient(135deg, var(--casino-gold), #FFA500);
+  color: var(--casino-black);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  border: 1px solid rgba(255, 215, 0, 0.6);
+}
+
+/* Wooden Oak Drum Styles */
+.casino-barrel-stage {
+  @apply relative w-full max-w-3xl mx-auto;
+  min-height: 600px;
+  background: radial-gradient(circle at center, #2a1810 0%, #1a1a1a 70%, #000 100%);
+  border: 3px solid #8B4513;
+  border-radius: 2rem;
+  box-shadow: 
+    0 0 40px rgba(139, 69, 19, 0.4),
+    inset 0 0 50px rgba(139, 69, 19, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+  perspective: 1200px;
+}
+
+.wooden-drum-container {
+  position: relative;
+  width: 500px;
+  height: 320px;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
+}
+
+.drum-names-container {
+  pointer-events: none;
+  transform-style: preserve-3d;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.drum-name-slot {
+  position: absolute;
+  white-space: nowrap;
+  z-index: 10;
+  transform-style: preserve-3d;
+}
+
+.drum-name-text {
+  @apply text-center px-4 py-3 rounded-lg;
+  background: linear-gradient(135deg, 
+    rgba(245, 222, 179, 0.95) 0%, 
+    rgba(222, 184, 135, 0.95) 30%,
+    rgba(210, 180, 140, 0.95) 70%,
+    rgba(222, 184, 135, 0.95) 100%
+  );
+  border: 2px solid rgba(139, 69, 19, 0.8);
+  box-shadow: 
+    0 0 15px rgba(139, 69, 19, 0.3),
+    inset 0 0 10px rgba(245, 222, 179, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  color: #654321;
+  font-weight: bold;
+  text-shadow: 
+    0 1px 2px rgba(255, 255, 255, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.5);
+  min-width: 180px;
+  transform: perspective(1000px);
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  backdrop-filter: blur(2px);
+}
+
+.highlight-name .drum-name-text {
+  background: linear-gradient(135deg, 
+    rgba(245, 222, 179, 1) 0%, 
+    rgba(240, 230, 140, 1) 30%,
+    rgba(255, 248, 220, 1) 50%,
+    rgba(240, 230, 140, 1) 70%,
+    rgba(245, 222, 179, 1) 100%
+  );
+  border-color: #8B4513;
+  border-width: 3px;
+  box-shadow: 
+    0 0 25px rgba(139, 69, 19, 0.6),
+    0 0 40px rgba(240, 230, 140, 0.4),
+    inset 0 0 20px rgba(255, 248, 220, 0.3),
+    0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: perspective(1000px) scale(1.1);
+  z-index: 25;
+  animation: drum-name-glow 2s ease-in-out infinite alternate;
+}
+
+.name-primary {
+  @apply text-sm font-bold;
+  color: #654321;
+  text-shadow: 
+    0 1px 2px rgba(255, 255, 255, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.5px;
+}
+
+.name-secondary {
+  @apply text-xs;
+  color: rgba(101, 67, 33, 0.8);
+  text-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.5);
+  margin-top: 2px;
+}
+
+.highlight-name .name-primary {
+  @apply text-base;
+  color: #8B4513;
+  text-shadow: 
+    0 0 8px rgba(139, 69, 19, 0.8),
+    0 1px 2px rgba(255, 255, 255, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.7);
+  animation: drum-text-highlight 1.5s ease-in-out infinite alternate;
+}
+
+.highlight-name .name-secondary {
+  color: rgba(139, 69, 19, 0.9);
+  text-shadow: 
+    0 0 5px rgba(139, 69, 19, 0.6),
+    0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.barrel-controls {
+  @apply mt-8 flex gap-4 justify-center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.barrel-spin-btn {
+  @apply px-8 py-4 rounded-2xl text-xl font-bold transition-all duration-300;
+  background: linear-gradient(135deg, 
+    #8B4513 0%, 
+    #A0522D 25%,
+    #CD853F 50%,
+    #A0522D 75%,
+    #8B4513 100%
+  );
+  color: #F5DEB3;
+  border: 3px solid #654321;
+  box-shadow: 
+    0 0 20px rgba(139, 69, 19, 0.5),
+    inset 0 0 20px rgba(245, 222, 179, 0.1),
+    0 5px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 
+    0 0 10px rgba(245, 222, 179, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  min-width: 280px;
+  position: relative;
+  overflow: hidden;
+}
+
+.barrel-refresh-btn {
+  @apply px-6 py-4 rounded-2xl text-lg font-bold transition-all duration-300;
+  background: linear-gradient(135deg, 
+    #228B22 0%, 
+    #32CD32 25%,
+    #90EE90 50%,
+    #32CD32 75%,
+    #228B22 100%
+  );
+  color: #006400;
+  border: 3px solid #006400;
+  box-shadow: 
+    0 0 20px rgba(34, 139, 34, 0.5),
+    inset 0 0 20px rgba(144, 238, 144, 0.1),
+    0 5px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 
+    0 0 10px rgba(144, 238, 144, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.barrel-refresh-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(144, 238, 144, 0.3), 
+    transparent
+  );
+  transition: left 0.8s ease;
+}
+
+.barrel-refresh-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.barrel-refresh-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 6px 30px rgba(34, 139, 34, 0.7),
+    inset 0 0 25px rgba(144, 238, 144, 0.2),
+    0 8px 15px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, 
+    #32CD32 0%, 
+    #90EE90 25%,
+    #98FB98 50%,
+    #90EE90 75%,
+    #32CD32 100%
+  );
+}
+
+.barrel-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.barrel-spin-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(245, 222, 179, 0.3), 
+    transparent
+  );
+  transition: left 0.8s ease;
+}
+
+.barrel-spin-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.barrel-spin-btn:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 8px 35px rgba(139, 69, 19, 0.7),
+    inset 0 0 30px rgba(245, 222, 179, 0.2),
+    0 10px 20px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, 
+    #A0522D 0%, 
+    #CD853F 25%,
+    #F5DEB3 50%,
+    #CD853F 75%,
+    #A0522D 100%
+  );
+  color: #654321;
+}
+
+.barrel-spin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.barrel-admin-btn {
+  @apply px-6 py-4 rounded-2xl text-lg font-bold transition-all duration-300;
+  background: linear-gradient(135deg, #F5DEB3 0%, #DEB887 50%, #F5DEB3 100%);
+  color: #654321;
+  border: 2px solid #8B4513;
+  box-shadow: 
+    0 0 20px rgba(245, 222, 179, 0.5),
+    0 3px 10px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.barrel-admin-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 6px 30px rgba(245, 222, 179, 0.7),
+    0 8px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Wooden Drum Animations */
+@keyframes drum-name-glow {
+  0% { 
+    box-shadow: 
+      0 0 25px rgba(139, 69, 19, 0.6),
+      0 0 40px rgba(240, 230, 140, 0.4),
+      inset 0 0 20px rgba(255, 248, 220, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+  100% { 
+    box-shadow: 
+      0 0 35px rgba(139, 69, 19, 0.8),
+      0 0 60px rgba(240, 230, 140, 0.6),
+      inset 0 0 30px rgba(255, 248, 220, 0.4),
+      0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes drum-text-highlight {
+  0% { 
+    text-shadow: 
+      0 0 8px rgba(139, 69, 19, 0.8),
+      0 1px 2px rgba(255, 255, 255, 0.6),
+      0 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  100% { 
+    text-shadow: 
+      0 0 15px rgba(139, 69, 19, 1),
+      0 0 25px rgba(160, 82, 45, 0.8),
+      0 1px 2px rgba(255, 255, 255, 0.8),
+      0 2px 4px rgba(0, 0, 0, 0.7);
+  }
+}
+
+.casino-bg {
+  @apply absolute inset-0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(220, 20, 60, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 140, 0, 0.05) 0%, transparent 70%);
+}
+
+.casino-lights {
+  @apply absolute inset-0;
+  background: 
+    linear-gradient(45deg, transparent 48%, rgba(255, 215, 0, 0.1) 49%, rgba(255, 215, 0, 0.1) 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(255, 215, 0, 0.1) 49%, rgba(255, 215, 0, 0.1) 51%, transparent 52%);
+  animation: casino-lights 3s ease-in-out infinite;
+}
+
+.casino-sparkles {
+  @apply absolute inset-0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, var(--casino-gold), transparent),
+    radial-gradient(2px 2px at 40px 70px, var(--casino-gold), transparent),
+    radial-gradient(1px 1px at 90px 40px, var(--casino-gold), transparent),
+    radial-gradient(1px 1px at 130px 80px, var(--casino-gold), transparent),
+    radial-gradient(2px 2px at 160px 30px, var(--casino-gold), transparent);
+  background-repeat: repeat;
+  background-size: 200px 100px;
+  animation: casino-sparkle 4s linear infinite;
+}
+
+.casino-winner-card {
+  @apply relative px-8 py-6 text-center rounded-3xl;
+  background: linear-gradient(135deg, var(--casino-black) 0%, #2a2a2a 50%, var(--casino-black) 100%);
+  border: 3px solid var(--casino-gold);
+  box-shadow: 
+    0 0 60px rgba(255, 215, 0, 0.8),
+    inset 0 0 30px rgba(255, 215, 0, 0.2);
+  animation: casino-winner-glow 2s ease-in-out infinite alternate;
+}
+
+.casino-crown {
+  @apply text-4xl mb-2;
+  animation: casino-bounce 1s ease-in-out infinite alternate;
+}
+
+.casino-ticker-card {
+  @apply h-full flex flex-col rounded-3xl p-6;
+  background: linear-gradient(135deg, var(--casino-black) 0%, #2a2a2a 50%, var(--casino-black) 100%);
+  border: 3px solid var(--casino-gold);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+}
+
+.casino-ticker-header {
+  @apply text-center mb-4;
+}
+
+.casino-neon-text {
+  @apply text-xl font-bold;
+  color: var(--casino-gold);
+  text-shadow: 
+    0 0 10px var(--casino-gold),
+    0 0 20px var(--casino-gold),
+    0 0 30px var(--casino-gold);
+  animation: casino-neon 2s ease-in-out infinite alternate;
+}
+
+.casino-ticker-display {
+  @apply flex-1 relative overflow-hidden rounded-2xl p-4;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.casino-ticker-inner {
+  @apply absolute inset-0 grid place-items-center;
+}
+
+.casino-name-display {
+  animation: casino-name-glow 1s ease-in-out infinite alternate;
+}
+
+.casino-glow {
+  text-shadow: 
+    0 0 10px var(--casino-gold),
+    0 0 20px var(--casino-gold);
+}
+
+.casino-controls {
+  @apply mt-6 flex gap-4;
+}
+
+.casino-roll-btn {
+  @apply flex-1 px-6 py-4 rounded-2xl text-xl font-bold transition-all duration-300;
+  background: linear-gradient(135deg, var(--casino-red) 0%, #8B0000 50%, var(--casino-red) 100%);
+  color: var(--casino-gold);
+  border: 2px solid var(--casino-gold);
+  box-shadow: 
+    0 0 20px rgba(220, 20, 60, 0.5),
+    inset 0 0 20px rgba(255, 215, 0, 0.1);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.casino-roll-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 30px rgba(220, 20, 60, 0.7),
+    inset 0 0 25px rgba(255, 215, 0, 0.2);
+}
+
+.casino-roll-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.casino-admin-btn {
+  @apply px-6 py-4 rounded-2xl text-lg font-bold transition-all duration-300;
+  background: linear-gradient(135deg, var(--casino-gold) 0%, #FFA500 50%, var(--casino-gold) 100%);
+  color: var(--casino-black);
+  border: 2px solid var(--casino-black);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  text-decoration: none;
+}
+
+.casino-admin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 30px rgba(255, 215, 0, 0.7);
+}
+
+.casino-sparkle-animation {
+  @apply absolute inset-0 pointer-events-none;
+  background-image: 
+    radial-gradient(2px 2px at 10px 20px, var(--casino-gold), transparent),
+    radial-gradient(2px 2px at 50px 60px, var(--casino-gold), transparent),
+    radial-gradient(1px 1px at 80px 30px, var(--casino-gold), transparent);
+  background-repeat: repeat;
+  background-size: 100px 80px;
+  animation: casino-sparkle 3s linear infinite;
+}
+
+/* Casino Animations */
+@keyframes casino-shine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes casino-lights {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes casino-sparkle {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-200px); }
+}
+
+@keyframes casino-winner-glow {
+  0% { 
+    box-shadow: 
+      0 0 60px rgba(255, 215, 0, 0.8),
+      inset 0 0 30px rgba(255, 215, 0, 0.2);
+  }
+  100% { 
+    box-shadow: 
+      0 0 80px rgba(255, 215, 0, 1),
+      inset 0 0 40px rgba(255, 215, 0, 0.3);
+  }
+}
+
+@keyframes casino-bounce {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-10px); }
+}
+
+@keyframes casino-neon {
+  0% { 
+    text-shadow: 
+      0 0 10px var(--casino-gold),
+      0 0 20px var(--casino-gold),
+      0 0 30px var(--casino-gold);
+  }
+  100% { 
+    text-shadow: 
+      0 0 15px var(--casino-gold),
+      0 0 25px var(--casino-gold),
+      0 0 35px var(--casino-gold),
+      0 0 45px var(--casino-gold);
+  }
+}
+
+@keyframes casino-name-glow {
+  0% { 
+    text-shadow: 
+      0 0 10px var(--casino-gold),
+      0 0 20px var(--casino-gold);
+  }
+  100% { 
+    text-shadow: 
+      0 0 15px var(--casino-gold),
+      0 0 25px var(--casino-gold),
+      0 0 35px var(--casino-gold);
+  }
+}
+
+/* Casino Wheel Styles */
+.casino-wheel-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.casino-wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.8),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  background: conic-gradient(from 0deg, #FFD700, #FF4757, #2C3E50, #2ECC71, #FFD700);
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.wheel-name-text {
+  font-family: 'Arial Black', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.5px;
+}
+
+.casino-spin-btn {
+  background: linear-gradient(145deg, #FFD700, #FFA500);
+  border: 3px solid #B8860B;
+  border-radius: 15px;
+  padding: 20px 40px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8B0000;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 20px;
+}
+
+.casino-spin-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #FFED4E, #FFB84D);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.casino-spin-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.casino-spin-btn:disabled {
+  background: linear-gradient(145deg, #999, #666);
+  border-color: #555;
+  color: #333;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.casino-refresh-btn {
+  background: linear-gradient(145deg, #2ECC71, #27AE60);
+  border: 2px solid #229954;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.casino-refresh-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #58D68D, #2ECC71);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.casino-refresh-btn:disabled {
+  background: linear-gradient(145deg, #95A5A6, #7F8C8D);
+  border-color: #6C7B7D;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Winner Popup Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.6s ease-out;
+}
