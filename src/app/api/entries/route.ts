@@ -9,6 +9,9 @@ const entrySchema = z.object({
   phone: z.string().regex(/\d{10}/, 'Phone must be 10 digits')
 })
 
+// This route should not be statically generated
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const summary = req.nextUrl.searchParams.get('summary')
   if (summary) {

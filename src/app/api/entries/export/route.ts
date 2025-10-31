@@ -1,5 +1,8 @@
 import { prisma } from '@/lib/db'
 
+// This route should not be statically generated
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const rows = await prisma.entry.findMany({ orderBy: { createdAt: 'asc' } })
   const header = 'first_name,last_name,phone\n'

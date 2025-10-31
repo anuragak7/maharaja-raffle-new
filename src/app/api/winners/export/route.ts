@@ -1,5 +1,8 @@
 import { prisma } from '@/lib/db'
 
+// This route should not be statically generated
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const rows = await prisma.winner.findMany({ include: { entry: true }, orderBy: { drawnAt: 'asc' } })
   const header = 'round,drawn_at,first_name,last_name,phone\n'

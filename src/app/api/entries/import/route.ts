@@ -2,6 +2,8 @@ import { prisma } from '@/lib/db'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
+// This route should not be statically generated
+export const dynamic = 'force-dynamic'
 
 function parseCSV(text: string) {
   const lines = text.trim().split(/\r?\n/)
