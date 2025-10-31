@@ -1,4 +1,4 @@
-# Maharaja Farmers Market – Lucky Draw
+# Hicksville Farmers Market – Lucky Draw
 
 Beer-barrel themed raffle app with Next.js + Prisma (PostgreSQL).
 

@@ -9,7 +9,7 @@ export default function Page() {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={process.env.NEXT_PUBLIC_LOGO_URL!} alt="Logo" className="h-10 w-10 object-contain rounded" />
           ) : null}
-          <h1 className="text-2xl font-bold">Maharaja Farmers Market – Lucky Draw</h1>
+          <h1 className="text-2xl font-bold">Hicksville Farmers Market – Lucky Draw</h1>
         </div>
       </header>
 
