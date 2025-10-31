@@ -1,0 +1,15 @@
+
+> maharaja-lucky-draw@1.0.0 dev
+> next dev --hostname 0.0.0.0
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3001
+  - Network:      http://0.0.0.0:3001
+  - Environments: .env
+  - Experiments (use with caution):
+    · typedRoutes
+
+ ✓ Starting...
+ ✓ Ready in 1302ms
+[?25h

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maharaja Hicksville Raffle - Kiosk</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .wheel-container {
+            width: 400px;
+            height: 400px;
+            margin: 2rem auto;
+            border: 8px solid #ffd700;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fab1a0, #ff7675, #6c5ce7, #a29bfe, #fd79a8, #e17055, #00b894);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wheel-center {
+            width: 80px;
+            height: 80px;
+            background: #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 4px solid #ff8c00;
+        }
+        .spin-btn {
+            font-size: 1.5rem;
+            padding: 15px 40px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 2rem 0;
+            transition: all 0.3s;
+        }
+        .spin-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+        .spin-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        .winner-display {
+            font-size: 2rem;
+            color: #ffd700;
+            margin: 1rem 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .redirect-link {
+            font-size: 1.2rem;
+            color: #ffd700;
+            text-decoration: none;
+            margin: 1rem 0;
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .redirect-link:hover {
+            background: #ffd700;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎰 MAHARAJA HICKSVILLE RAFFLE 🎰</h1>
+        
+        <div class="status">
+            <div>Total Entries: <span id="totalEntries">Loading...</span></div>
+            <div>Remaining: <span id="remainingEntries">Loading...</span></div>
+            <div>Winners Drawn: <span id="drawnEntries">Loading...</span></div>
+        </div>
+
+        <div class="wheel-container" id="wheel">
+            <div class="wheel-center">🎰</div>
+        </div>
+
+        <div class="winner-display" id="winnerDisplay">
+            Click SPIN to draw a winner!
+        </div>
+
+        <button class="spin-btn" id="spinBtn" onclick="drawWinner()">🎲 SPIN THE WHEEL 🎲</button>
+
+        <a href="/draw" class="redirect-link">🔄 Go to Full Raffle Page</a>
+    </div>
+
+    <script>
+        let entries = [];
+        let isSpinning = false;
+        
+        // Load entries on page load
+        async function loadEntries() {
+            try {
+                const response = await fetch('/api/entries?summary=1');
+                const data = await response.json();
+                
+                document.getElementById('totalEntries').textContent = data.counters.total;
+                document.getElementById('remainingEntries').textContent = data.counters.remaining;
+                document.getElementById('drawnEntries').textContent = data.counters.drawn;
+                
+                // Store remaining entries for drawing
+                const entriesResponse = await fetch('/api/entries');
+                const entriesData = await entriesResponse.json();
+                entries = entriesData.filter(entry => !entry.hasWon);
+                
+                if (entries.length === 0) {
+                    document.getElementById('spinBtn').disabled = true;
+                    document.getElementById('winnerDisplay').textContent = '🏆 All prizes have been awarded! 🏆';
+                }
+            } catch (error) {
+                console.error('Error loading entries:', error);
+                document.getElementById('winnerDisplay').textContent = 'Error loading entries. Please refresh.';
+            }
+        }
+        
+        // Draw a winner
+        async function drawWinner() {
+            if (isSpinning || entries.length === 0) return;
+            
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('winnerDisplay').textContent = '🎲 Drawing winner... 🎲';
+            
+            // Spin animation
+            const wheel = document.getElementById('wheel');
+            wheel.style.transition = 'transform 3s ease-out';
+            wheel.style.transform = `rotate(${Math.random() * 360 + 1440}deg)`;
+            
+            try {
+                const response = await fetch('/api/draw', { method: 'POST' });
+                const result = await response.json();
+                
+                if (result.success) {
+                    setTimeout(() => {
+                        document.getElementById('winnerDisplay').innerHTML = 
+                            `🎉 WINNER: <br><strong>${result.winner.firstName} ${result.winner.lastName}</strong><br>📞 ${result.winner.phone} 🎉`;
+                        
+                        // Remove winner from local array
+                        entries = entries.filter(entry => entry.id !== result.winner.id);
+                        
+                        // Update counters
+                        loadEntries();
+                        
+                        isSpinning = false;
+                        if (entries.length > 0) {
+                            document.getElementById('spinBtn').disabled = false;
+                        }
+                    }, 3000);
+                } else {
+                    throw new Error(result.error || 'Failed to draw winner');
+                }
+            } catch (error) {
+                console.error('Error drawing winner:', error);
+                document.getElementById('winnerDisplay').textContent = 'Error drawing winner. Please try again.';
+                isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+            }
+        }
+        
+        // Load entries when page loads
+        loadEntries();
+        
+        // Refresh entries every 30 seconds
+        setInterval(loadEntries, 30000);
+    </script>
+</body>
+</html>
