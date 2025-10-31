@@ -23,11 +23,16 @@ export async function POST(req: NextRequest) {
   if (!(file instanceof File)) return new Response('file missing', { status: 400 })
   const text = await file.text()
   const rows = parseCSV(text).filter(r => r.firstName && r.lastName && /\d{10}/.test(r.phone))
-  const ops = rows.map(r => prisma.entry.upsert({
-    where: { phone: r.phone },
-    update: { firstName: r.firstName, lastName: r.lastName },
-    create: r
-  }))
-  await prisma.$transaction(ops, { timeout: 20000 })
+  
+  await prisma.$transaction(async (tx) => {
+    for (const r of rows) {
+      await tx.entry.upsert({
+        where: { phone: r.phone },
+        update: { firstName: r.firstName, lastName: r.lastName },
+        create: r
+      })
+    }
+  })
+  
   return Response.json({ ok: true, imported: rows.length })
 }
