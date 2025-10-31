@@ -133,7 +133,7 @@ export default function DrawPage() {
         
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-7xl font-bold text-yellow-400 mb-6 whitespace-nowrap">🎰 MAHARAJA HICKSVILLE RAFFLE 🎰</h1>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-yellow-400 mb-6 text-center px-4">🎰 MAHARAJA HICKSVILLE RAFFLE 🎰</h1>
           <div className="flex justify-center gap-6 text-white">
             <div className="bg-black/50 px-6 py-3 rounded text-xl">Total: {counters.total}</div>
             <div className="bg-black/50 px-6 py-3 rounded text-xl">Remaining: {counters.remaining}</div>
