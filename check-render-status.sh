@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Quick Render Status Check Script
+echo "🔍 Checking your Render deployment status..."
+echo ""
+echo "1. Go to https://render.com and check if you see:"
+echo "   - maharaja-bellerose-raffle (web service)"
+echo "   - maharaja-raffle-db (database)"
+echo ""
+echo "2. If you see them:"
+echo "   ✅ USE EXISTING - Just redeploy latest commit"
+echo "   📝 Go to web service → Manual Deploy → Deploy latest commit"
+echo ""
+echo "3. If you DON'T see them:"
+echo "   🆕 START FRESH - Create new Blueprint"
+echo "   📝 New → Blueprint → Connect maharaja-raffle-new repo"
+echo ""
+echo "🎯 Either way, your latest code includes:"
+echo "   - All 47 real entries in seed file"
+echo "   - Proper PostgreSQL configuration"
+echo "   - BELLEROSE branding"
+echo ""
+echo "🚀 Expected result: Working raffle at https://your-app.onrender.com/draw"
