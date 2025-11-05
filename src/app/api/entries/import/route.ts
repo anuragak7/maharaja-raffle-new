@@ -10,7 +10,6 @@ function parseCSV(text: string) {
   if (lines.length < 2) throw new Error('CSV must have header row and at least one data row')
   
   const header = lines.shift()?.split(',').map(s=>s.trim().toLowerCase().replace(/['"]/g, '')) || []
-  
   // Support multiple header variations
   const firstNameIndex = header.findIndex(h => 
     h.includes('first') && h.includes('name') || h === 'firstname' || h === 'first'
@@ -46,6 +45,8 @@ function parseCSV(text: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    const store = 'bellerose' // Hardcoded for Bellerose app
+    
     const form = await req.formData()
     const file = form.get('file')
     
@@ -69,16 +70,33 @@ export async function POST(req: NextRequest) {
     
     await prisma.$transaction(async (tx) => {
       for (const r of rows) {
-        const existing = await tx.entry.findUnique({ where: { phone: r.phone } })
+        const existing = await tx.entry.findUnique({ 
+          where: { 
+            phone_store: {
+              phone: r.phone,
+              store: store
+            }
+          } 
+        })
         
         if (existing) {
           await tx.entry.update({
-            where: { phone: r.phone },
+            where: { 
+              phone_store: {
+                phone: r.phone,
+                store: store
+              }
+            },
             data: { firstName: r.firstName, lastName: r.lastName }
           })
           updated++
         } else {
-          await tx.entry.create({ data: r })
+          await tx.entry.create({ 
+            data: {
+              ...r,
+              store: store
+            }
+          })
           imported++
         }
       }
@@ -89,13 +107,13 @@ export async function POST(req: NextRequest) {
       imported, 
       updated,
       total: imported + updated,
-      message: `Success! ${imported} new entries added, ${updated} existing entries updated.`
+      message: `Success! ${imported} new Bellerose entries added, ${updated} existing entries updated.`
     })
     
   } catch (error) {
     console.error('CSV Import Error:', error)
     return new Response(
-      error instanceof Error ? error.message : 'Unknown error during import', 
+      error instanceof Error ? error.message : 'Unknown error during import',
       { status: 500 }
     )
   }

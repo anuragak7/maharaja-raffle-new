@@ -13,16 +13,25 @@ const entrySchema = z.object({
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
+  const store = 'bellerose' // Hardcoded for Bellerose app
+  
   const summary = req.nextUrl.searchParams.get('summary')
   if (summary) {
-    const total = await prisma.entry.count()
-    const drawn = await prisma.entry.count({ where: { hasWon: true } })
+    const total = await prisma.entry.count({ where: { store } })
+    const drawn = await prisma.entry.count({ where: { hasWon: true, store } })
     const remaining = total - drawn
-    const sample = await prisma.entry.findMany({ where: { hasWon: false }, take: 20, orderBy: { createdAt: 'desc' } })
+    const sample = await prisma.entry.findMany({ 
+      where: { hasWon: false, store }, 
+      take: 20, 
+      orderBy: { createdAt: 'desc' } 
+    })
     return Response.json({ counters: { total, remaining, drawn }, sample })
   }
 
-  const entries = await prisma.entry.findMany({ orderBy: { createdAt: 'desc' } })
+  const entries = await prisma.entry.findMany({ 
+    where: { store },
+    orderBy: { createdAt: 'desc' } 
+  })
   return Response.json({ entries })
 }
 
@@ -33,14 +42,19 @@ export async function POST(req: NextRequest) {
     return new Response(parsed.error.issues.map(i=>i.message).join(', '), { status: 400 })
   }
   const { firstName, lastName, phone } = parsed.data
+  const store = 'bellerose' // Hardcoded for Bellerose app
+  
   try {
     const e = await prisma.entry.create({ data: {
-      firstName, lastName, phone: phone.replace(/\D/g, '')
+      firstName, 
+      lastName, 
+      phone: phone.replace(/\D/g, ''),
+      store
     }})
     return Response.json({ ok: true, entry: e })
   } catch (e: any) {
     console.error('Database error creating entry:', e)
-    if (e.code === 'P2002') return new Response('Phone already exists', { status: 400 })
+    if (e.code === 'P2002') return new Response('Phone already exists for this store', { status: 400 })
     return new Response('Failed to create: ' + (e.message || 'Unknown error'), { status: 500 })
   }
 }

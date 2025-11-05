@@ -11,11 +11,14 @@ model Entry {
   id        String   @id @default(uuid())
   firstName String
   lastName  String
-  phone     String   @unique
+  phone     String   
+  store     String   @default("bellerose")
   createdAt DateTime @default(now())
   hasWon    Boolean  @default(false)
 
   winners   Winner[]
+
+  @@unique([phone, store])
 }
 
 model Winner {
