@@ -7,31 +7,36 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
+            overflow: hidden;
         }
         .container {
             text-align: center;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         h1 {
-            font-size: 3rem;
-            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         .wheel-container {
-            width: 400px;
-            height: 400px;
-            margin: 2rem auto;
-            border: 8px solid #ffd700;
+            width: 350px;
+            height: 350px;
+            margin: 1rem auto;
+            border: 6px solid #ffd700;
             border-radius: 50%;
             background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fab1a0, #ff7675, #6c5ce7, #a29bfe, #fd79a8, #e17055, #00b894);
             position: relative;
@@ -40,25 +45,25 @@
             justify-content: center;
         }
         .wheel-center {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             background: #ffd700;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            border: 4px solid #ff8c00;
+            font-size: 1.5rem;
+            border: 3px solid #ff8c00;
         }
         .spin-btn {
-            font-size: 1.5rem;
-            padding: 15px 40px;
+            font-size: 1.2rem;
+            padding: 12px 30px;
             background: #28a745;
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin: 2rem 0;
+            margin: 1rem 0;
             transition: all 0.3s;
         }
         .spin-btn:hover {
@@ -72,26 +77,27 @@
         }
         .status {
             background: rgba(0,0,0,0.3);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            margin: 2rem 0;
+            margin: 1rem 0;
+            font-size: 0.9rem;
         }
         .winner-display {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #ffd700;
             margin: 1rem 0;
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .redirect-link {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #ffd700;
             text-decoration: none;
-            margin: 1rem 0;
+            margin: 0.5rem 0;
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: 2px solid #ffd700;
             border-radius: 5px;
             transition: all 0.3s;

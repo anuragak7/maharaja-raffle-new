@@ -1,28 +1,31 @@
 import { PrismaClient } from '@prisma/client'
+
 const prisma = new PrismaClient()
 
 async function main() {
+  console.log('🌱 Starting Render database seed...')
+  
   await prisma.config.upsert({
     where: { id: 1 },
     update: {},
     create: { id: 1, maskPhone: true, spinMinSec: 15, spinMaxSec: 20 }
   })
-
-  const sample = [
-    ['Aarav','Patel','4045550101'],
-    ['Isha','Reddy','4045550102'],
-    ['Vikram','Singh','4045550103'],
-    ['Priya','Shah','4045550104'],
-    ['Rohan','Iyer','4045550105']
+  
+  const entries = [
+    ['John','George','5165079185'],
+    ['SARBJIT','KAUR','9174420511'],
+    ['SARVASH','SARVASH','4694125917']
   ]
 
-  for (const [f,l,p] of sample) {
+  for (const [f, l, p] of entries) {
     await prisma.entry.upsert({
       where: { phone: p },
-      update: { firstName: f, lastName: l },
+      update: {},
       create: { firstName: f, lastName: l, phone: p }
     })
   }
+  
+  console.log('✅ Seed complete!')
 }
 
-main().finally(async () => { await prisma.$disconnect() })
+main().finally(() => prisma.$disconnect())

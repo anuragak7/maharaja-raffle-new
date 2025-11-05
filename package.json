@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "next start",
+    "start": "next start -p ${PORT:-3000}",
     "postinstall": "prisma generate",
     "migrate": "prisma migrate dev",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "render-setup": "npx prisma db push --force-reset --accept-data-loss && npx prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "5.18.0",
