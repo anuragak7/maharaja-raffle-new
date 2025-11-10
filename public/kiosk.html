@@ -3,212 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maharaja Hicksville Raffle - Kiosk</title>
+    <title>Maharaja Bellerose - Kiosk Monitor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 15px;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            padding: 0;
             overflow: hidden;
         }
-        .container {
-            text-align: center;
-            max-width: 900px;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        .winner-animation {
+            animation: bounce 1s infinite;
         }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
         }
-        .wheel-container {
-            width: 350px;
-            height: 350px;
-            margin: 1rem auto;
-            border: 6px solid #ffd700;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fab1a0, #ff7675, #6c5ce7, #a29bfe, #fd79a8, #e17055, #00b894);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .drawing-animation {
+            animation: spin 2s linear infinite;
         }
-        .wheel-center {
-            width: 60px;
-            height: 60px;
-            background: #ffd700;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            border: 3px solid #ff8c00;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .spin-btn {
-            font-size: 1.2rem;
-            padding: 12px 30px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 1rem 0;
-            transition: all 0.3s;
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
         }
-        .spin-btn:hover {
-            background: #218838;
-            transform: scale(1.05);
-        }
-        .spin-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .status {
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        .winner-display {
-            font-size: 1.5rem;
-            color: #ffd700;
-            margin: 1rem 0;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .redirect-link {
-            font-size: 1rem;
-            color: #ffd700;
-            text-decoration: none;
-            margin: 0.5rem 0;
-            display: inline-block;
-            padding: 8px 16px;
-            border: 2px solid #ffd700;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        .redirect-link:hover {
-            background: #ffd700;
-            color: #333;
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🎰 MAHARAJA HICKSVILLE RAFFLE 🎰</h1>
-        
-        <div class="status">
-            <div>Total Entries: <span id="totalEntries">Loading...</span></div>
-            <div>Remaining: <span id="remainingEntries">Loading...</span></div>
-            <div>Winners Drawn: <span id="drawnEntries">Loading...</span></div>
+<body class="bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-black/20 backdrop-blur-sm border-b border-white/10 p-6">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                        MAHARAJA BELLEROSE
+                    </h1>
+                    <p class="text-xl text-blue-200 mt-1">Live Raffle Draw</p>
+                </div>
+                <div class="text-right">
+                    <div id="clock" class="text-2xl font-mono text-yellow-300"></div>
+                    <div class="text-lg text-gray-300">
+                        Total Participants: <span id="total-count" class="text-yellow-400 font-bold">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex h-[calc(100vh-120px)]">
+            <!-- Main Content Area -->
+            <div class="flex-1 p-8 flex flex-col items-center justify-center">
+                <!-- Default State -->
+                <div id="ready-state" class="text-center">
+                    <div class="text-8xl mb-8">🎊</div>
+                    <h2 class="text-6xl font-bold text-white mb-8">Ready for Lucky Draw</h2>
+                    <button id="draw-btn" 
+                            class="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 
+                                   text-white text-3xl font-bold py-6 px-16 rounded-full
+                                   transform transition-all duration-200 hover:scale-110 hover:shadow-2xl
+                                   border-4 border-yellow-300/30 pulse-glow">
+                        🎲 DRAW WINNER 🎲
+                    </button>
+                    <div id="no-entries-msg" class="text-red-400 text-xl mt-4 hidden">
+                        No participants available for draw
+                    </div>
+                </div>
+
+                <!-- Drawing State -->
+                <div id="drawing-state" class="text-center hidden">
+                    <div class="relative">
+                        <div class="w-32 h-32 border-8 border-yellow-400 border-t-transparent rounded-full drawing-animation mx-auto mb-8"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-6xl">🎰</div>
+                        </div>
+                    </div>
+                    <h2 class="text-6xl font-bold text-yellow-400 mb-4 pulse-glow">DRAWING...</h2>
+                    <p class="text-2xl text-blue-200">Selecting a lucky winner from <span id="drawing-count">0</span> participants</p>
+                </div>
+
+                <!-- Winner State -->
+                <div id="winner-state" class="text-center winner-animation hidden">
+                    <div class="text-8xl mb-8">�</div>
+                    <h2 class="text-8xl font-bold text-yellow-400 mb-6 pulse-glow">WINNER!</h2>
+                    <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-12 border border-yellow-400/30 shadow-2xl">
+                        <h3 id="winner-name" class="text-6xl font-bold text-white mb-4"></h3>
+                        <p id="winner-phone" class="text-3xl text-blue-200 mb-6"></p>
+                        <p id="winner-time" class="text-2xl text-gray-300"></p>
+                    </div>
+                    <div class="text-6xl mt-8">🏆</div>
+                </div>
+            </div>
+
+            <!-- Sidebar - Recent Winners -->
+            <div class="w-96 bg-black/20 backdrop-blur-sm border-l border-white/10 p-6 overflow-y-auto">
+                <h3 class="text-2xl font-bold text-yellow-400 mb-6 text-center">🏆 RECENT WINNERS</h3>
+                
+                <div id="winners-list">
+                    <div id="no-winners" class="text-center text-gray-400 mt-12">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <p class="text-lg">No winners yet!</p>
+                        <p class="text-sm mt-2">Be the first to win!</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="wheel-container" id="wheel">
-            <div class="wheel-center">🎰</div>
-        </div>
-
-        <div class="winner-display" id="winnerDisplay">
-            Click SPIN to draw a winner!
-        </div>
-
-        <button class="spin-btn" id="spinBtn" onclick="drawWinner()">🎲 SPIN THE WHEEL 🎲</button>
-
-        <a href="/draw" class="redirect-link">🔄 Go to Full Raffle Page</a>
+        <!-- Footer Stats -->
+        <footer class="bg-black/30 backdrop-blur-sm border-t border-white/10 p-4">
+            <div class="max-w-7xl mx-auto flex justify-center space-x-12 text-center">
+                <div>
+                    <div id="stat-total" class="text-2xl font-bold text-yellow-400">0</div>
+                    <div class="text-sm text-gray-300">Total Participants</div>
+                </div>
+                <div>
+                    <div id="stat-winners" class="text-2xl font-bold text-green-400">0</div>
+                    <div class="text-sm text-gray-300">Winners Drawn</div>
+                </div>
+                <div>
+                    <div id="stat-remaining" class="text-2xl font-bold text-blue-400">0</div>
+                    <div class="text-sm text-gray-300">Remaining Entries</div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
         let entries = [];
-        let isSpinning = false;
+        let winners = [];
         
-        // Load entries on page load
-        async function loadEntries() {
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        
+        // Load data from API
+        async function loadData() {
             try {
-                const response = await fetch('/api/entries?summary=1');
-                const data = await response.json();
+                const [entriesRes, winnersRes] = await Promise.all([
+                    fetch('/api/entries?store=bellerose'),
+                    fetch('/api/winners?store=bellerose')
+                ]);
                 
-                document.getElementById('totalEntries').textContent = data.counters.total;
-                document.getElementById('remainingEntries').textContent = data.counters.remaining;
-                document.getElementById('drawnEntries').textContent = data.counters.drawn;
+                entries = await entriesRes.json();
+                winners = await winnersRes.json();
                 
-                // Store remaining entries for drawing
-                const entriesResponse = await fetch('/api/entries');
-                const entriesData = await entriesResponse.json();
-                entries = entriesData.filter(entry => !entry.hasWon);
-                
-                if (entries.length === 0) {
-                    document.getElementById('spinBtn').disabled = true;
-                    document.getElementById('winnerDisplay').textContent = '🏆 All prizes have been awarded! 🏆';
-                }
+                updateStats();
+                updateWinnersList();
             } catch (error) {
-                console.error('Error loading entries:', error);
-                document.getElementById('winnerDisplay').textContent = 'Error loading entries. Please refresh.';
+                console.error('Error loading data:', error);
             }
         }
         
-        // Draw a winner
+        // Update statistics
+        function updateStats() {
+            const totalCount = entries.length;
+            const winnersCount = winners.length;
+            const remaining = Math.max(0, totalCount - winnersCount);
+            
+            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('drawing-count').textContent = totalCount;
+            document.getElementById('stat-total').textContent = totalCount;
+            document.getElementById('stat-winners').textContent = winnersCount;
+            document.getElementById('stat-remaining').textContent = remaining;
+            
+            // Show/hide no entries message
+            const noEntriesMsg = document.getElementById('no-entries-msg');
+            const drawBtn = document.getElementById('draw-btn');
+            if (totalCount === 0) {
+                noEntriesMsg.classList.remove('hidden');
+                drawBtn.disabled = true;
+                drawBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                noEntriesMsg.classList.add('hidden');
+                drawBtn.disabled = false;
+                drawBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        // Update winners list
+        function updateWinnersList() {
+            const winnersList = document.getElementById('winners-list');
+            const noWinners = document.getElementById('no-winners');
+            
+            if (winners.length === 0) {
+                noWinners.style.display = 'block';
+                return;
+            }
+            
+            noWinners.style.display = 'none';
+            
+            const winnersHTML = winners.slice(0, 10).map((winner, index) => {
+                const emoji = index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🎊';
+                const bgClass = index === 0 ? 'bg-yellow-500/20 border-yellow-400/50 shadow-lg' : 'bg-white/5 border-white/10';
+                const textClass = index === 0 ? 'text-yellow-300 text-lg' : 'text-white';
+                
+                return `
+                    <div class="p-4 rounded-xl border ${bgClass} mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">${emoji}</span>
+                            <span class="text-xs text-gray-400">#${winners.length - index}</span>
+                        </div>
+                        <div class="font-bold ${textClass}">
+                            ${winner.firstName} ${winner.lastName}
+                        </div>
+                        <div class="text-sm text-gray-300">${winner.phone}</div>
+                        <div class="text-xs text-gray-400 mt-1">
+                            ${new Date(winner.wonAt).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            winnersList.innerHTML = winnersHTML;
+        }
+        
+        // Show state
+        function showState(stateName) {
+            ['ready-state', 'drawing-state', 'winner-state'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(stateName).classList.remove('hidden');
+        }
+        
+        // Draw winner
         async function drawWinner() {
-            if (isSpinning || entries.length === 0) return;
+            if (entries.length === 0) {
+                alert('No participants available for draw');
+                return;
+            }
             
-            isSpinning = true;
-            document.getElementById('spinBtn').disabled = true;
-            document.getElementById('winnerDisplay').textContent = '🎲 Drawing winner... 🎲';
-            
-            // Spin animation
-            const wheel = document.getElementById('wheel');
-            wheel.style.transition = 'transform 3s ease-out';
-            wheel.style.transform = `rotate(${Math.random() * 360 + 1440}deg)`;
+            showState('drawing-state');
             
             try {
-                const response = await fetch('/api/draw', { method: 'POST' });
-                const result = await response.json();
+                const response = await fetch('/api/draw?store=bellerose', { method: 'POST' });
                 
-                if (result.success) {
-                    setTimeout(() => {
-                        document.getElementById('winnerDisplay').innerHTML = 
-                            `🎉 WINNER: <br><strong>${result.winner.firstName} ${result.winner.lastName}</strong><br>📞 ${result.winner.phone} 🎉`;
-                        
-                        // Remove winner from local array
-                        entries = entries.filter(entry => entry.id !== result.winner.id);
-                        
-                        // Update counters
-                        loadEntries();
-                        
-                        isSpinning = false;
-                        if (entries.length > 0) {
-                            document.getElementById('spinBtn').disabled = false;
-                        }
-                    }, 3000);
-                } else {
-                    throw new Error(result.error || 'Failed to draw winner');
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Draw failed');
                 }
+                
+                const winner = await response.json();
+                
+                // Simulate drawing delay
+                setTimeout(() => {
+                    document.getElementById('winner-name').textContent = `${winner.firstName} ${winner.lastName}`;
+                    document.getElementById('winner-phone').textContent = `Phone: ${winner.phone}`;
+                    document.getElementById('winner-time').textContent = `Won at: ${new Date(winner.wonAt).toLocaleString()}`;
+                    showState('winner-state');
+                    
+                    // Load fresh data
+                    loadData();
+                    
+                    // Return to ready state after 15 seconds
+                    setTimeout(() => {
+                        showState('ready-state');
+                    }, 15000);
+                }, 3000);
+                
             } catch (error) {
                 console.error('Error drawing winner:', error);
-                document.getElementById('winnerDisplay').textContent = 'Error drawing winner. Please try again.';
-                isSpinning = false;
-                document.getElementById('spinBtn').disabled = false;
+                alert('Error drawing winner: ' + error.message);
+                showState('ready-state');
             }
         }
         
-        // Load entries when page loads
-        loadEntries();
-        
-        // Refresh entries every 30 seconds
-        setInterval(loadEntries, 30000);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            loadData();
+            setInterval(loadData, 5000); // Refresh every 5 seconds
+            
+            showState('ready-state');
+            
+            document.getElementById('draw-btn').addEventListener('click', drawWinner);
+            
+            // Keyboard shortcuts for kiosk mode
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    e.preventDefault();
+                    const currentState = document.querySelector('[id$="-state"]:not(.hidden)');
+                    if (currentState && currentState.id === 'ready-state') {
+                        drawWinner();
+                    }
+                }
+                // Press 'R' to refresh data
+                if (e.key === 'r' || e.key === 'R') {
+                    e.preventDefault();
+                    loadData();
+                }
+                // Press 'F' to go fullscreen
+                if (e.key === 'f' || e.key === 'F') {
+                    e.preventDefault();
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    } else {
+                        document.exitFullscreen();
+                    }
+                }
+            });
+            
+            // Auto-hide cursor after inactivity
+            let cursorTimeout;
+            function hideCursor() {
+                document.body.style.cursor = 'none';
+            }
+            function showCursor() {
+                document.body.style.cursor = 'default';
+                clearTimeout(cursorTimeout);
+                cursorTimeout = setTimeout(hideCursor, 5000);
+            }
+            document.addEventListener('mousemove', showCursor);
+            showCursor();
+        });
     </script>
 </body>
 </html>
