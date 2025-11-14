@@ -105,17 +105,17 @@ export default function KioskPage() {
       <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 p-6">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <div>
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+            <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 drop-shadow-lg">
               MAHARAJA BELLEROSE
             </h1>
-            <p className="text-xl text-blue-200 mt-1">Live Raffle Draw</p>
+            <p className="text-3xl text-blue-200 mt-2 font-bold">Live Raffle Draw</p>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-mono text-yellow-300">
+            <div className="text-4xl font-mono text-yellow-300 font-bold">
               {formatTime(currentTime)}
             </div>
-            <div className="text-lg text-gray-300">
-              Total Participants: <span className="text-yellow-400 font-bold">{totalEntries}</span>
+            <div className="text-2xl text-gray-300 mt-1">
+              Total Participants: <span className="text-yellow-400 font-black text-3xl">{totalEntries}</span>
             </div>
           </div>
         </div>
@@ -126,16 +126,16 @@ export default function KioskPage() {
         <div className="flex-1 p-8 flex flex-col items-center justify-center">
           {isDrawing && (
             <div className="text-center">
-              <div className="relative">
-                <div className="w-32 h-32 border-8 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+              <div className="relative mb-12">
+                <div className="w-48 h-48 border-12 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-12"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-6xl">🎰</div>
+                  <div className="text-8xl">🎰</div>
                 </div>
               </div>
-              <h2 className="text-6xl font-bold text-yellow-400 mb-4 animate-pulse">
+              <h2 className="text-9xl font-black text-yellow-400 mb-8 animate-pulse drop-shadow-2xl">
                 DRAWING...
               </h2>
-              <p className="text-2xl text-blue-200">
+              <p className="text-4xl text-blue-200 font-bold">
                 Selecting a lucky winner from {totalEntries} participants
               </p>
             </div>
@@ -143,44 +143,44 @@ export default function KioskPage() {
 
           {showWinner && currentWinner && (
             <div className="text-center animate-bounce">
-              <div className="text-8xl mb-8">🎉</div>
-              <h2 className="text-8xl font-bold text-yellow-400 mb-6 animate-pulse">
+              <div className="text-9xl mb-12">🎉</div>
+              <h2 className="text-10xl font-black text-yellow-400 mb-10 animate-pulse drop-shadow-2xl">
                 WINNER!
               </h2>
-              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 border border-yellow-400/30 shadow-2xl">
-                <h3 className="text-6xl font-bold text-white mb-4">
+              <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-16 border-4 border-yellow-400/50 shadow-2xl">
+                <h3 className="text-8xl font-black text-white mb-8 drop-shadow-lg">
                   {currentWinner.firstName} {currentWinner.lastName}
                 </h3>
-                <p className="text-3xl text-blue-200 mb-6">
+                <p className="text-5xl text-blue-200 mb-8 font-bold">
                   Phone: {currentWinner.phone}
                 </p>
-                <p className="text-2xl text-gray-300">
+                <p className="text-3xl text-gray-300 font-semibold">
                   Won at: {new Date(currentWinner.wonAt).toLocaleString()}
                 </p>
               </div>
-              <div className="text-6xl mt-8">🏆</div>
+              <div className="text-8xl mt-12">🏆</div>
             </div>
           )}
 
           {!isDrawing && !showWinner && (
             <div className="text-center">
-              <div className="text-8xl mb-8">🎊</div>
-              <h2 className="text-6xl font-bold text-white mb-8">
-                Ready for Lucky Draw
+              <div className="text-9xl mb-12">🎊</div>
+              <h2 className="text-8xl font-black text-white mb-12 drop-shadow-2xl">
+                READY FOR LUCKY DRAW
               </h2>
               <button
                 onClick={handleDraw}
                 disabled={totalEntries === 0}
                 className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 
                          disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed
-                         text-white text-3xl font-bold py-6 px-16 rounded-full
+                         text-white text-5xl font-black py-10 px-24 rounded-3xl
                          transform transition-all duration-200 hover:scale-110 hover:shadow-2xl
-                         border-4 border-yellow-300/30"
+                         border-8 border-yellow-300/50 shadow-2xl"
               >
                 🎲 DRAW WINNER 🎲
               </button>
               {totalEntries === 0 && (
-                <p className="text-red-400 text-xl mt-4">
+                <p className="text-red-400 text-3xl mt-8 font-bold">
                   No participants available for draw
                 </p>
               )}
