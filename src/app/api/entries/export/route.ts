@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const store = 'bellerose' // Filter for Bellerose entries only
+  const store = 'bellerose' // Filter for Bellerose entries only - store separation enforced
   const rows = await prisma.entry.findMany({ 
     where: { store },
     orderBy: { createdAt: 'asc' } 
